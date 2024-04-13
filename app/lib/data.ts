@@ -24,12 +24,9 @@ export async function fetchRevenue() {
     // Artificially delay a response for demo purposes.
     // Don't do this in production :)
 
-    console.log('Fetching REVENUE DATA...');
     await new Promise((resolve) => setTimeout(resolve, timeOut));
 
     const data = await sql<Revenue>`SELECT * FROM revenue`;
-
-    console.log(`Data fetch completed after ${timeOut} ms.`);
 
     const revenue = data.rows;
 
@@ -110,8 +107,6 @@ export async function fetchFilteredInvoices(
 ) {
   noStore();
   const offset = (currentPage - 1) * ITEMS_PER_PAGE;
-
-  console.log(`fetchFilteredInvoices: query: '${query}', currentPage: ${currentPage}`);
 
   try {
     const invoices = await sql<InvoicesTable>`

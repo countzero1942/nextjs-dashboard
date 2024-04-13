@@ -21,7 +21,6 @@ export default function Search({ placeholder }: { placeholder: string }) {
       params.delete(QUERY)
     }
     const url = `${pathname}?${params.toString()}`;
-    console.log(`Search Component: ${url}`);
     replace(url);
 
   }, 300);
