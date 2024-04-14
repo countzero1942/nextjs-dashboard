@@ -10,6 +10,8 @@ import {
 } from './definitions';
 import { formatCurrency } from './utils';
 import { unstable_noStore as noStore } from 'next/cache';
+import EditInvoiceForm from '@/app/ui/invoices/edit-form';
+import { join } from 'path';
 
 const timeOut = 3000;
 
@@ -159,7 +161,8 @@ export async function fetchInvoicesPages(query: string) {
   }
 }
 
-export async function fetchInvoiceById(id: string) {
+export async function fetchInvoiceById(id: string): 
+    Promise<InvoiceForm | undefined> {
   noStore();
   try {
     const data = await sql<InvoiceForm>`
@@ -171,14 +174,19 @@ export async function fetchInvoiceById(id: string) {
       FROM invoices
       WHERE invoices.id = ${id};
     `;
+  
+    const invoice = data.rows[0];
 
-    const invoice = data.rows.map((invoice) => ({
-      ...invoice,
-      // Convert amount from cents to dollars
-      amount: invoice.amount / 100,
-    }));
+    if (invoice) {
+      return {
+        ...invoice, 
+        amount: invoice.amount / 100
+      };
+    }
+    else {
+      return invoice; // undefined
+    }
 
-    return invoice[0];
   } catch (error) {
     console.error('Database Error:', error);
     throw new Error('Failed to fetch invoice.');
